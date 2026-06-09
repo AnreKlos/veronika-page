@@ -1048,48 +1048,51 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
     ease: 'none'
   });
 
-  // === SOLUTION HORIZONTAL ===
+  // === SOLUTION HORIZONTAL (only if cards overflow viewport) ===
   const track = document.getElementById('solutionTrack');
   const cards_total = gsap.utils.toArray('.solution-card');
   const cardWidth = cards_total[0].offsetWidth + 40;
   const gap = 40;
   const totalWidth = cards_total.length * (cardWidth);
-  // last card centered in viewport at end — with fine-tune offset
-  const lastCardCenter = (cards_total.length - 1) * (cardWidth) + cards_total[0].offsetWidth / 2;
-  const endX = -(lastCardCenter - window.innerWidth / 2 + 30);
 
-  const solutionTween = gsap.to(track, {
-    x: endX,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: '#solution',
-      start: 'top top',
-      end: () => '+=' + (Math.abs(endX) + window.innerHeight),
-      pin: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-      anticipatePin: 1
-    }
-  });
+  if (totalWidth > window.innerWidth) {
+    // last card centered in viewport at end — with fine-tune offset
+    const lastCardCenter = (cards_total.length - 1) * (cardWidth) + cards_total[0].offsetWidth / 2;
+    const endX = -(lastCardCenter - window.innerWidth / 2 + 30);
 
-  // DrawSVG on solution cards
-  gsap.utils.toArray('.solution-card').forEach((card, i) => {
-    ScrollTrigger.create({
-      trigger: card,
-      containerAnimation: solutionTween,
-      start: 'left 80%',
-      end: 'left 20%',
-      onEnter: () => {
-        const paths = card.querySelectorAll('path[id^="svg"]');
-        if (paths.length) {
-          paths.forEach(p => { if (p.getAttribute('stroke-dasharray')) {
-            gsap.to(p, { drawSVG: '0% 100%', duration: 1.2, ease: 'power2.out' });
-          }});
-        }
-      },
-      once: true
+    const solutionTween = gsap.to(track, {
+      x: endX,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#solution',
+        start: 'top top',
+        end: () => '+=' + (Math.abs(endX) + window.innerHeight),
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        anticipatePin: 1
+      }
     });
-  });
+
+    // DrawSVG on solution cards
+    gsap.utils.toArray('.solution-card').forEach((card, i) => {
+      ScrollTrigger.create({
+        trigger: card,
+        containerAnimation: solutionTween,
+        start: 'left 80%',
+        end: 'left 20%',
+        onEnter: () => {
+          const paths = card.querySelectorAll('path[id^="svg"]');
+          if (paths.length) {
+            paths.forEach(p => { if (p.getAttribute('stroke-dasharray')) {
+              gsap.to(p, { drawSVG: '0% 100%', duration: 1.2, ease: 'power2.out' });
+            }});
+          }
+        },
+        once: true
+      });
+    });
+  }
 
   // === METAPHOR ITEMS — materialize from sides + scramble reveal ===
   // set initial positions immediately
