@@ -576,7 +576,7 @@
 
   /* DESKTOP: center cards when no scroll needed */
   @media (min-width: 769px) {
-    .solution-track { justify-content: flex-start; padding: 0 0 0 30px; }
+    .solution-track { justify-content: center; padding: 0; }
   }
 
   /* SCROLL TO TOP */
@@ -1060,7 +1060,7 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
   const gap = 40;
   const totalWidth = cards_total.length * (cardWidth);
 
-  if (totalWidth > window.innerWidth) {
+  if (window.innerWidth < 769 && totalWidth > window.innerWidth) {
     // last card centered in viewport at end — with fine-tune offset
     const lastCardCenter = (cards_total.length - 1) * (cardWidth) + cards_total[0].offsetWidth / 2;
     const endX = -(lastCardCenter - window.innerWidth / 2 + 30);
