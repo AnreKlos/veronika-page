@@ -285,37 +285,30 @@
     opacity: 0;
   }
 
-/* SOLUTION HORIZONTAL — slide-in from right */
+/* SOLUTION HORIZONTAL */
 .solution-section {
   position: relative;
   overflow: hidden;
-}
-.solution-header {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 24px;
-  padding-bottom: 40px;
 }
 .solution-panel {
   height: 100vh;
   display: flex;
   align-items: center;
   will-change: transform;
-  overflow: hidden;
 }
 .solution-track {
   display: flex;
-  gap: 60px;
-  padding: 0 80px;
+  gap: 40px;
+  padding: 0 24px;
   will-change: transform;
 }
 .solution-card {
-  min-width: 55vw;
-  max-width: 680px;
+  min-width: 380px;
+  max-width: 440px;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 52px 44px;
+  border-radius: 20px;
+  padding: 40px 36px;
   flex-shrink: 0;
   position: relative;
   overflow: hidden;
@@ -621,7 +614,6 @@
     .metaphor-split { grid-template-columns: 1fr; gap: 30px; }
     .metaphor-side.left { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
     .metaphor-side.right { padding-left: 0; border-left: none; padding-top: 0; }
-    .solution-card { min-width: 300px; }
     .turning-bg-svg { width: 300px; height: 300px; opacity: 0.08; }
     .hero-terminal { font-size: 12px; }
     .section { padding: 80px 0; }
@@ -720,9 +712,9 @@
   </div>
 </section>
 
-<!-- ===== SOLUTION (Horizontal — slide from right) ===== -->
+<!-- ===== SOLUTION (Horizontal) ===== -->
 <section class="solution-section" id="solution">
-  <div class="solution-header">
+  <div class="section-inner" style="padding-bottom:20px;">
     <div class="section-label" id="solutionLabel">Решение</div>
     <h2 class="section-title" id="solutionTitle">А теперь представь: ты просто говоришь — и это делается.</h2>
   </div>
@@ -1051,34 +1043,25 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
     ease: 'none'
   });
 
-  // === SOLUTION HORIZONTAL — slide-in from right ===
+  // === SOLUTION HORIZONTAL ===
   const track = document.getElementById('solutionTrack');
   const cards_total = gsap.utils.toArray('.solution-card');
-  const cardW = cards_total[0].offsetWidth;
-  const gap = 60;
-  const pad = 80;
-  const trackPadding = pad * 2; // 80px left + 80px right
-  const totalWidth = cards_total.length * cardW + (cards_total.length - 1) * gap + trackPadding;
+  const cardWidth = cards_total[0].offsetWidth + 40;
+  const totalWidth = cardWidth * cards_total.length;
 
-  const startX = window.innerWidth + pad; // all cards off-screen right
-  const endX = -(totalWidth + pad);        // all cards fully off-screen left
-
-  const solutionTween = gsap.fromTo(track,
-    { x: startX },
-    {
-      x: endX,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#solution',
-        start: 'top top',
-        end: () => '+=' + (totalWidth + window.innerHeight),
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-        anticipatePin: 1
-      }
+  const solutionTween = gsap.to(track, {
+    x: () => -(totalWidth - window.innerWidth + 48),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '#solution',
+      start: 'top top',
+      end: () => '+=' + (totalWidth + window.innerHeight),
+      pin: true,
+      scrub: 1,
+      invalidateOnRefresh: true,
+      anticipatePin: 1
     }
-  );
+  });
 
   // DrawSVG on solution cards
   gsap.utils.toArray('.solution-card').forEach((card, i) => {
