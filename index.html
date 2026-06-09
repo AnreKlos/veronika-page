@@ -988,19 +988,25 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
   // === MIRROR CARDS — fly in from corners ===
   const mirrorCards = gsap.utils.toArray('.mirror-card');
   const mirrorAngles = [
-    { x: -80, y: -40 },  // top-left card: from top-left
-    { x: 80, y: -40 },   // top-right card: from top-right
-    { x: -80, y: 40 },   // bottom-left card: from bottom-left
-    { x: 80, y: 40 }     // bottom-right card: from bottom-right
+    { x: -80, y: -40 },
+    { x: 80, y: -40 },
+    { x: -80, y: 40 },
+    { x: 80, y: 40 }
   ];
+  // hide cards immediately — no flash before animation
+  mirrorCards.forEach((card, i) => {
+    const angle = mirrorAngles[i % 4];
+    gsap.set(card, { x: angle.x, y: angle.y, opacity: 0, rotation: i % 2 === 0 ? -2 : 2 });
+  });
   ScrollTrigger.batch(mirrorCards, {
     onEnter: batch => {
       batch.forEach((card, i) => {
-        const angle = mirrorAngles[mirrorCards.indexOf(card) % 4];
-        gsap.fromTo(card,
-          { x: angle.x, y: angle.y, opacity: 0, rotation: i % 2 === 0 ? -2 : 2 },
-          { x: 0, y: 0, opacity: 1, rotation: 0, duration: 0.7, ease: 'power3.out', delay: i * 0.1, overwrite: true }
-        );
+        const idx = mirrorCards.indexOf(card);
+        const angle = mirrorAngles[idx % 4];
+        gsap.to(card, {
+          x: 0, y: 0, opacity: 1, rotation: 0,
+          duration: 0.7, ease: 'power3.out', delay: i * 0.1, overwrite: true
+        });
       });
     },
     start: 'top 85%',
