@@ -1055,9 +1055,9 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
   const cardWidth = cards_total[0].offsetWidth + 40;
   const gap = 40;
   const totalWidth = cards_total.length * (cardWidth);
-  // last card centered in viewport at end
+  // last card centered in viewport at end — with fine-tune offset
   const lastCardCenter = (cards_total.length - 1) * (cardWidth) + cards_total[0].offsetWidth / 2;
-  const endX = -(lastCardCenter - window.innerWidth / 2);
+  const endX = -(lastCardCenter - window.innerWidth / 2 + 30);
 
   const solutionTween = gsap.to(track, {
     x: endX,
