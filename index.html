@@ -618,7 +618,7 @@
     .metaphor-side.left { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
     .metaphor-side.right { padding-left: 0; border-left: none; padding-top: 0; }
     .solution-card { min-width: 82vw; max-width: 90vw; padding: 24px 20px; }
-    .solution-track { margin-top: -26vh; }
+    .solution-track { margin-top: -30vh; }
     .turning-bg-svg { width: 300px; height: 300px; opacity: 0.08; }
     .hero-terminal { font-size: 12px; }
     .section { padding: 80px 0; }
@@ -1053,15 +1053,19 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
   const track = document.getElementById('solutionTrack');
   const cards_total = gsap.utils.toArray('.solution-card');
   const cardWidth = cards_total[0].offsetWidth + 40;
-  const totalWidth = cardWidth * cards_total.length;
+  const gap = 40;
+  const totalWidth = cards_total.length * (cardWidth);
+  // last card centered in viewport at end
+  const lastCardCenter = (cards_total.length - 1) * (cardWidth) + cards_total[0].offsetWidth / 2;
+  const endX = -(lastCardCenter - window.innerWidth / 2);
 
   const solutionTween = gsap.to(track, {
-    x: () => -(totalWidth - window.innerWidth + 48),
+    x: endX,
     ease: 'none',
     scrollTrigger: {
       trigger: '#solution',
       start: 'top top',
-      end: () => '+=' + (totalWidth + window.innerHeight),
+      end: () => '+=' + (Math.abs(endX) + window.innerHeight),
       pin: true,
       scrub: 1,
       invalidateOnRefresh: true,
